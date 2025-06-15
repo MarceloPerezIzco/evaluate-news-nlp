@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { library } = require("webpack");
 
 module.exports = {
     mode: "development",
@@ -7,6 +8,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "main.js",
+        libraryTarget: "var",
+        library: "Client",
     },
     module: {
         rules: [
@@ -22,6 +25,7 @@ module.exports = {
         port: 8080,
         open: true,
         hot: true,
+        watchFiles: ["src/client/views/*.html"],
     },
     plugins: [
         new HtmlWebpackPlugin({
