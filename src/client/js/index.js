@@ -1,3 +1,6 @@
 import { handleSubmit } from "./formHandler";
 
-export { handleSubmit };
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("url-form");
+    form.addEventListener("submit", handleSubmit);
+});
