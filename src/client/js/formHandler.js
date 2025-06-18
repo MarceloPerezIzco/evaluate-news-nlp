@@ -13,7 +13,7 @@ async function handleSubmit(event) {
     console.log("✅ Form submitted from formHandler.js");
 
     try {
-        const response = await fetch("http://localhost:3000/analise", {
+        const response = await fetch("http://localhost:3000/analyse", {
             method: "POST",
             credentials: "same-origin",
             headers: {
