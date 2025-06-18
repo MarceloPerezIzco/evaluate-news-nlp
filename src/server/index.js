@@ -3,7 +3,7 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-app.use(express.static(path.join(__dirname, "../..dist")));
+app.use(express.static(path.join(__dirname, "../../dist")));
 
 app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}`);
