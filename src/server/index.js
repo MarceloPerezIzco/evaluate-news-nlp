@@ -10,12 +10,24 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../../dist")));
 
 // 3. Routes
-app.post("/analyse", (req, res) => {
-    console.log("🔵 Body recibido:", req.body);
-    res.json({
-        message: "Petición recibida correctamente!",
-        url: req.body.url,
-    });
+app.post("/analyse", async (req, res) => {
+    const textToSend = "Hello World";
+    const apiUrl = "https://kooye7u703.execute-api.us-east-1.amazonaws.com/NLPAnalyzer";
+
+    try {
+        const apiResponse = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({ text: textToSend }),
+        });
+        const data = await apiResponse.json();
+        // Send result to front-end
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Error communication with external API" });
+    }
 });
 
 // 4. Raise the server
