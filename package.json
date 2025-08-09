@@ -1,5 +1,6 @@
 {
     "name": "evaluate-news-nlp",
+    "type": "module",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -22,6 +23,7 @@
         "webpack-dev-server": "^5.2.2"
     },
     "dependencies": {
+        "cheerio": "^1.1.2",
         "express": "^5.1.0"
     }
 }
