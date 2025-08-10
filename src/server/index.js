@@ -26,32 +26,59 @@ app.post("/analyse", async (req, res) => {
     }
 
     try {
-        // 1. Obtain HTML
-        const htmlResponse = await fetch(url);
-        if (!htmlResponse.ok) {
-            throw new Error(`Failed to fetch the page: ${htmlResponse.status}`);
-        }
-        const html = await htmlResponse.text();
+        console.log("➡️  Fetching page:", url);
 
-        // 2. Extract text
+        const commonHeaders = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Upgrade-Insecure-Requests": "1",
+            Connection: "keep-alive",
+        };
+
+        let html;
+        let htmlResponse = await fetch(url, { headers: commonHeaders, redirect: "follow" });
+        console.log("⬅️  Page status:", htmlResponse.status);
+
+        if (!htmlResponse.ok) {
+            // Fallback
+            const proxyUrl = "https://r.jina.ai/http://" + url.replace(/^https?:\/\//, "");
+            console.log("🔁 Falling back to:", proxyUrl);
+
+            htmlResponse = await fetch(proxyUrl, { headers: { "User-Agent": commonHeaders["User-Agent"] } });
+            console.log("⬅️  Fallback status:", htmlResponse.status);
+
+            if (!htmlResponse.ok) {
+                return res.status(htmlResponse.status).json({
+                    error: `Failed to fetch the page (status ${htmlResponse.status})`,
+                });
+            }
+        }
+
+        html = await htmlResponse.text();
+
         const $ = cheerio.load(html);
-        let text = $("body").text();
-        text = text.replace(/\s+/g, " ").trim().slice(0, 200);
+        let text = $("article").text().trim() || $("main").text().trim() || $('[role="main"]').text().trim() || $("body").text().trim();
+
+        text = text.replace(/\s+/g, " ").slice(0, 200);
 
         if (!text) {
             return res.status(422).json({ error: "No readable text found at this URL." });
         }
 
-        // 3. Send text to the API
+        const apiUrl = "https://kooye7u703.execute-api.us-east-1.amazonaws.com/NLPAnalyzer";
         const apiResponse = await fetch(apiUrl, {
             method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
+            headers: { "Content-type": "application/json" },
             body: JSON.stringify({ text }),
         });
+
+        if (!apiResponse.ok) {
+            return res.status(502).json({ error: `NLP API failed (status ${apiResponse.status})` });
+        }
+
         const data = await apiResponse.json();
-        res.json(data);
+        res.json({ ...data, text });
     } catch (error) {
         res.status(500).json({ error: "Error communication with external API" });
     }
