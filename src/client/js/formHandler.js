@@ -1,33 +1,53 @@
 async function handleSubmit(event) {
     event.preventDefault();
 
-    // Get the URL from the input field
-    const articleUrl = document.getElementById("article-url").value;
+    const articleUrl = document.getElementById("article-url").value.trim();
+    const sentimentEl = document.getElementById("sentiment");
+    const contentTypeEl = document.getElementById("contentType");
+    const previewEl = document.getElementById("preview");
+    const errorEl = document.getElementById("error");
 
-    // Check if input is empty
-    if (!articleUrl.trim()) {
-        console.log("⚠️ The input is empty");
+    errorEl.textContent = "";
+    errorEl.style.display = "none";
+
+    if (!articleUrl || !isValidUrl(articleUrl)) {
+        errorEl.textContent = "Please insert a valid URL";
+        errorEl.style.display = "block";
         return;
     }
-
-    console.log("✅ Form submitted from formHandler.js");
 
     try {
         const response = await fetch("http://localhost:3000/analyse", {
             method: "POST",
-            credentials: "same-origin",
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: "same-origin",
             body: JSON.stringify({ url: articleUrl }),
         });
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error ${response.status}`);
         }
+
         const data = await response.json();
-        console.log("🧠 Response from server:", data);
+
+        sentimentEl.textContent = data.sentiment ?? "Unknown";
+        contentTypeEl.textContent = data.subjectivity ?? "Unknown";
+        previewEl.textContent = data.text ?? "";
     } catch (error) {
-        console.log("❌ Error during fetch:", error);
+        errorEl.textContent = "Error obtaining data from the API";
+        errorEl.style.display = "block";
+        console.log("❌ Error:", error);
+    }
+}
+
+function isValidUrl(str) {
+    try {
+        const u = new URL(str);
+        return u.protocol === "http:" || u.protocol === "https:";
+    } catch {
+        return false;
     }
 }
 

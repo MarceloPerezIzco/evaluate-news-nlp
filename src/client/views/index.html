@@ -12,6 +12,22 @@
                 <input type="text" name="article-url" id="article-url" placeholder="Enter article URL" />
                 <button type="submit">Submit</button>
             </form>
+            <section id="results">
+                <h2>Analysis</h2>
+                <p>
+                    <strong>Sentiment:</strong>
+                    <span id="sentiment"></span>
+                </p>
+                <p>
+                    <strong>Content Type:</strong>
+                    <span id="contentType"></span>
+                </p>
+                <p>
+                    <strong>Preview:</strong>
+                    <span id="preview"></span>
+                </p>
+                <p id="error" role="alert" style="display: none"></p>
+            </section>
         </div>
     </body>
 </html>
