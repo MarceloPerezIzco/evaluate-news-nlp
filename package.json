@@ -8,6 +8,7 @@
         "start": "node src/server/index.js",
         "start:dev": "webpack serve --config webpack.dev.js",
         "build:dev": "webpack --config webpack.dev.js",
+        "build:prod": "webpack --config webpack.prod.js",
         "test": "jest"
     },
     "keywords": [],
@@ -24,7 +25,8 @@
         "jest-environment-jsdom": "^30.0.5",
         "webpack": "^5.99.9",
         "webpack-cli": "^6.0.1",
-        "webpack-dev-server": "^5.2.2"
+        "webpack-dev-server": "^5.2.2",
+        "workbox-webpack-plugin": "^7.3.0"
     },
     "dependencies": {
         "cheerio": "^1.1.2",
