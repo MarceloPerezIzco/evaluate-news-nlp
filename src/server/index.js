@@ -3,7 +3,7 @@ import path from "path";
 import * as cheerio from "cheerio";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 1. Middleware for parsing JSON in POST requests
 app.use(express.json());
