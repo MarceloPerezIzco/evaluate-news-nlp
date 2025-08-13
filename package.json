@@ -11,6 +11,9 @@
         "build:prod": "webpack --config webpack.prod.js",
         "test": "jest"
     },
+    "engines": {
+        "node": ">=20"
+    },
     "keywords": [],
     "author": "",
     "license": "ISC",
