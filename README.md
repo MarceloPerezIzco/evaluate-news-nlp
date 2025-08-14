@@ -6,7 +6,7 @@ It is a web tool that allows users to analyze the sentiment of a news article or
 
 ## 🛠 Technologies Used
 
--   Webpack 4
+-   Webpack 5
 -   Babel
 -   Express
 -   Node.js
